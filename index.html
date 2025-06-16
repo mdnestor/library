@@ -1,1 +1,90 @@
-Hello, world!
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Entry List</title>
+
+</head>
+<body>
+
+  <h1>Entries</h1>
+  <div id="topic-links"></div>
+  <div id="entries-container"></div>
+
+  <script>
+    const entries = [
+      {
+        title: "To Kill a Mockingbird",
+        author: "Harper Lee",
+        year: "1960",
+        topic: "Fiction",
+        url: "https://en.wikipedia.org/wiki/To_Kill_a_Mockingbird"
+      },
+      {
+        title: "1984",
+        author: "George Orwell",
+        year: "1949",
+        topic: "Dystopian",
+        url: "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four"
+      },
+      {
+        title: "The Great Gatsby",
+        author: "F. Scott Fitzgerald",
+        year: "1925",
+        topic: "Classic",
+        url: "https://en.wikipedia.org/wiki/The_Great_Gatsby"
+      },
+      {
+        title: "Untitled Entry"
+        // no other fields
+      }
+    ];
+
+    // Group entries by topic
+    const topics = {};
+    entries.forEach(entry => {
+      const topic = entry.topic || "Other";
+      if (!topics[topic]) topics[topic] = [];
+      topics[topic].push(entry);
+    });
+
+    // Generate topic navigation
+    const topicLinksDiv = document.getElementById("topic-links");
+    const topicNames = Object.keys(topics).sort();
+    if (topicNames.length > 1) {
+      const ul = document.createElement("ul");
+      topicNames.forEach(topic => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="#topic-${topic}">${topic}</a>`;
+        ul.appendChild(li);
+      });
+      topicLinksDiv.appendChild(ul);
+    }
+
+    // Generate entries grouped by topic
+    const container = document.getElementById("entries-container");
+
+    topicNames.forEach(topic => {
+      const section = document.createElement("section");
+      section.innerHTML = `<h2 id="topic-${topic}">${topic}</h2>`;
+      const ol = document.createElement("ol");
+
+      topics[topic].forEach(entry => {
+        const li = document.createElement("li");
+        let line = `<strong>${entry.title}</strong>`;
+        if (entry.author) line += ` by ${entry.author}`;
+        if (entry.year) line += ` (${entry.year})`;
+        if (entry.url) line += `. <a href="${entry.url}" target="_blank">link</a>`;
+        li.innerHTML = line;
+        ol.appendChild(li);
+      });
+
+      section.appendChild(ol);
+      container.appendChild(section);
+    });
+  </script>
+
+</body>
+</html>
+
